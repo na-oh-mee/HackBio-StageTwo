@@ -23,22 +23,22 @@ Steps for single cell analysis include:
 4. Dimensinality reduction
 5. Cell Type Annotation
 
-# import core single cell tools
-import scanpy as sc
-import anndata as ad
-import igraph as ig
+### import core single cell tools
+'''import scanpy as sc'''
+'''import anndata as ad'''
+'''import igraph as ig'''
 Preprocessing
-# Step 1: Loading of Dataset
-bone_marrow_adata = sc.read('bone_marrow.h5ad')
-Cells and Genes present in dataset
-bone_marrow_adata.var.head()
-bone_marrow_adata.obs.head()
+### Step 1: Loading of Dataset
+'''bone_marrow_adata = sc.read('bone_marrow.h5ad')'''
+###Cells and Genes present in dataset
+'''bone_marrow_adata.var.head()'''
+'''bone_marrow_adata.obs.head()'''
 # Step 2: QUALITY CONTROL
 This is important to keep high quality cells and informative genes. Removes low quality cells, doublets and empty droplets
 # Quality control of both cells and genes
-bone_marrow_adata.var_names_make_unique()
-bone_marrow_adata.obs_names_make_unique()
-n_counts (total UMI / read counts per cell)
+'''bone_marrow_adata.var_names_make_unique()'''
+'''bone_marrow_adata.obs_names_make_unique()'''
+'''n_counts (total UMI / read counts per cell)'''
 
 n_genes (number of genes detected per cell; usually >0)
 
@@ -145,5 +145,6 @@ sc.pl.dotplot(
     color_map='Reds',
     use_raw=False
 )
+
 
 
