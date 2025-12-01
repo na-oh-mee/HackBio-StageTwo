@@ -1,7 +1,6 @@
 Single Cell RNA Sequencing Analysis
 
 Single-cell RNA sequencing (scRNA-seq) technologies allow the dissection of gene expression at single-cell resolution, which greatly revolutionizes transcriptomic studies. Here, it is the details of single cell sequencing analysis of Peripheral Blood Mononuclear Cell (PBMC) dataset using Scanpy.
-
 Annotated cells found in datasets are:
 Neutrophil,
 Plasma cells,
@@ -23,18 +22,18 @@ Steps for single cell analysis include:
 3. Filtering and Normalization
 4. Dimensinality reduction
 5. Cell Type Annotation
-Preprocessing
-!pip install scanpy anndata igraph celltypist decoupler
+
 # import core single cell tools
 import scanpy as sc
 import anndata as ad
 import igraph as ig
-Loading of Dataset
+Preprocessing
+# Step 1: Loading of Dataset
 bone_marrow_adata = sc.read('bone_marrow.h5ad')
 Cells and Genes present in dataset
 bone_marrow_adata.var.head()
 bone_marrow_adata.obs.head()
-QUALITY CONTROL
+# Step 2: QUALITY CONTROL
 This is important to keep high quality cells and informative genes. Removes low quality cells, doublets and empty droplets
 # Quality control of both cells and genes
 bone_marrow_adata.var_names_make_unique()
@@ -51,12 +50,7 @@ Doublet scores — computationally inferred doublets (two cells captured as one)
 
 
 # Mitochondrial genes
-sc.pl.violin(
-    bone_marrow_adata,
-    ["pct_counts_MT"],
-    jitter=0.4,
-    multi_panel=False,
-)
+sc.pl.violin( bone_marrow_adata, ["pct_counts_MT"], jitter=0.4, multi_panel=False)
 # number of genes in cells
 sc.pl.violin(
     bone_marrow_adata,
@@ -68,16 +62,20 @@ sc.pl.violin(
 sc.pp.filter_cells(adata, min_genes=1000)
 sc.pp.filter_genes(adata, min_cells=1000)
 sc.pp.scrublet(bone_marrow_adata) #doublet detection
+# Step 3: Noramlize
 Normalization: is to correct for differences in sequencing depth / library size so expression values are comparable across cells.
 
 # Normalizing to median total counts
 sc.pp.normalize_total()
 # Logarithmize the data
 sc.pp.log1p()
+# Step 4: Find Highly variable genes
 Highly Variable Gene Selection: are genes that show biologically meaningful variation across cells. HVGs focuses on true biological differences, removes noise, speeds up computation, as well as improve clustering accuracy.
 
 sc.pl.highly_variable_genes(bone_marrow_adata )
 sc.pp.highly_variable_genes(bone_marrow_adata)
+
+# Step 5: Dimensionality reduction: PCA and UMAP
 Dimensionality reduction: This includes principal component analysis (PCAs), which sepearted naive states from inactive states and healthy from infected states
 sc.tl.pca(bone_marrow_adata)
 sc.pl.pca_variance_ratio(bone_marrow_adata, n_pcs=10, log=False)
@@ -88,6 +86,7 @@ sc.pl.umap(
     color=["pct_counts_HB"],
     size=8,
 )
+# Step 6: Cluster and Annonate
 Clustering (Leiden/ Louvain): Using the neighborhood graph, algorithms like Leiden: find densely connected groups of cells, maximize modularity (network theory) and discover distinct cell populations.
 Each cluster represent cell types, states or sub population
 In leiden, the greater the resolution, the number the clusters
@@ -98,8 +97,6 @@ sc.pl.umap(
     bone_marrow_adata,
     color=["leiden_res0_02", "leiden_res0_5", "leiden_res2"],
 )
-
-
 
 
 Cell Type Annotation: Cell annotation is the process of assigning biological meaning (cell type or state) to each computationally identified cluster in your dataset.
@@ -148,4 +145,5 @@ sc.pl.dotplot(
     color_map='Reds',
     use_raw=False
 )
+
 
