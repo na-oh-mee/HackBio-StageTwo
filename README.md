@@ -28,6 +28,7 @@ Steps for single cell analysis include:
 '''import scanpy as sc
 '''import anndata as ad
 '''import igraph as ig
+
 Preprocessing
 ### Step 1: Loading of Dataset
 '''bone_marrow_adata = sc.read('bone_marrow.h5ad')
@@ -39,6 +40,7 @@ Preprocessing
 '''bone_marrow_adata.obs.head()
 
 This is important to keep high quality cells and informative genes. Removes low quality cells, doublets and empty droplets
+
 # Quality control of both cells and genes
 
 '''bone_marrow_adata.var_names_make_unique()
